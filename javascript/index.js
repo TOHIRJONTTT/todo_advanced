@@ -17,16 +17,17 @@ let onEdit = (evt) => {
 };
 
 let onDelete = (evt) => {
+    
+    let arr = [];
 
     allToDos.forEach((todo) =>  {
-        let arr = [];
-
-        if (todo.id != Number(evt.target.dataset.id)){
+        if (todo.id !== evt.target.dataset.id - 0) {
             arr.push(todo);
         }
-        allToDos = arr;
-        onRender(arr);
     });     
+
+    allToDos = arr;
+    onRender(arr);
 };
 
 let onRender = (arr) => {
@@ -45,9 +46,6 @@ let onRender = (arr) => {
 
         elBtnDelete.addEventListener(`click`, onDelete);
         elBtnEdit.addEventListener(`click`, onEdit);
-
-        console.log(elToDo);
-
 
         elList.appendChild(elToDo);
     });
