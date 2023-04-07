@@ -2,7 +2,11 @@ let elForm = document.querySelector(`.js-form`);
 let elInput = document.querySelector(`.js-input`);
 let elList = document.querySelector(`.js-list`);
 let elTemplate = document.querySelector(`#js-template`).content;
-let allToDos = [];
+
+let dataInStorage = JSON.parse(localStorage.getItem(`allToDo`));
+
+// console.log(dataInStorage); 
+let allToDos = dataInStorage ? dataInStorage : [];
 
 let onEdit = (evt) => {
     allToDos.forEach((todo) => {
@@ -13,7 +17,7 @@ let onEdit = (evt) => {
         }
     });
     onRender(allToDos)
-      
+    localStorage.setItem(`allToDo`, JSON.stringify(allToDos)); 
 };
 
 let onDelete = (evt) => {
@@ -28,6 +32,7 @@ let onDelete = (evt) => {
 
     allToDos = arr;
     onRender(arr);
+    localStorage.setItem(`allToDo`, JSON.stringify(arr));
 };
 
 let onRender = (arr) => {
@@ -71,12 +76,14 @@ let newToDo = {
 
 allToDos.unshift(newToDo);
 onRender(allToDos);
+localStorage.setItem(`allToDo`, JSON.stringify(allToDos));
 
 elInput.value = null;
 elInput.focus();
 
 };
 
+onRender(allToDos);
 elForm.addEventListener(`submit`, onSubmit);
 
    
