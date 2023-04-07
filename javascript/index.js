@@ -2,10 +2,10 @@ let elForm = document.querySelector(`.js-form`);
 let elInput = document.querySelector(`.js-input`);
 let elList = document.querySelector(`.js-list`);
 let elTemplate = document.querySelector(`#js-template`).content;
+let elNumber = document.querySelector(`.number`);
 
 let dataInStorage = JSON.parse(localStorage.getItem(`allToDo`));
 
-// console.log(dataInStorage); 
 let allToDos = dataInStorage ? dataInStorage : [];
 
 let onEdit = (evt) => {
@@ -13,7 +13,6 @@ let onEdit = (evt) => {
         if(todo.id === evt.target.dataset.id -0) {
             let editedText = prompt(`Edit ToDo`, todo.text);
             todo.text = editedText;
-            console.log(editedText);
         }
     });
     onRender(allToDos)
@@ -37,7 +36,7 @@ let onDelete = (evt) => {
 
 let onRender = (arr) => {
     elList.innerHTML = null; 
-
+    elNumber.textContent = arr.length;
     arr.forEach((element) => {
         
         let elToDo = elTemplate.cloneNode(true);
@@ -53,37 +52,41 @@ let onRender = (arr) => {
         elBtnEdit.addEventListener(`click`, onEdit);
 
         elList.appendChild(elToDo);
+        
     });
 
 };
 
 let onSubmit = (evt) => {
-evt.preventDefault();
+ evt.preventDefault();
 
-let inputValue = elInput.value.trim();
+ let inputValue = elInput.value.trim();
 
-if(!inputValue) {
+ if(!inputValue) {
     alert(`Input ToDo`);
-};
+ };
 
-let newToDo = {
+ let newToDo = {
     id: allToDos.at(0) ? allToDos.at(0)?.id + 1 : 1,
     text: inputValue,
     isCompleted: false,
+ };
+
+
+
+ allToDos.unshift(newToDo);
+ onRender(allToDos);
+
+ localStorage.setItem(`allToDo`, JSON.stringify(allToDos));
+
+
+ elInput.value = null;
+ elInput.focus();
+
 };
 
-
-
-allToDos.unshift(newToDo);
 onRender(allToDos);
-localStorage.setItem(`allToDo`, JSON.stringify(allToDos));
 
-elInput.value = null;
-elInput.focus();
-
-};
-
-onRender(allToDos);
 elForm.addEventListener(`submit`, onSubmit);
 
    
