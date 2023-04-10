@@ -9,9 +9,14 @@ let dataInStorage = JSON.parse(localStorage.getItem(`allToDo`));
 let allToDos = dataInStorage ? dataInStorage : [];
 
 let onCompleted = (evt) => {
-    console.log(evt.target.checked);
-    console.log(evt.target.dataset.id);
-
+    allToDos.forEach(todo => {
+        if(todo.id === evt.target.dataset.id - 0) {
+            todo.isCompleted = evt.target.checked
+        }
+    })
+    console.log(allToDos);
+    localStorage.setItem(`allToDo`, JSON.stringify(allToDos));
+    onRender(allToDos);
 
 };
 
@@ -47,19 +52,30 @@ let onRender = (arr) => {
     arr.forEach((element) => {
         
         let elToDo = elTemplate.cloneNode(true);
-        elToDo.querySelector(`.js-text`).textContent = element.text;
+        let elText = elToDo.querySelector(`.js-text`);
+        elText.textContent = element.text;
 
+        
+        
         let elBtnEdit = elToDo.querySelector(`.js-edit-btn`);
         elBtnEdit.dataset.id = element.id;
         
         let elBtnDelete = elToDo.querySelector(`.js-delete-btn`);
         elBtnDelete.dataset.id = element.id;
-
+        
         let elCheckBox = elToDo.querySelector(`.js-check`);
         elCheckBox.dataset.id = element.id;
+        
+        if (element.isCompleted) {
+            elText.classList.add(`text-decoration-line-through`);
+        };
+
+        elCheckBox.checked = element.isCompleted
+
 
         elBtnDelete.addEventListener(`click`, onDelete);
         elBtnEdit.addEventListener(`click`, onEdit);
+        elCheckBox.addEventListener(`change`, onCompleted);
 
         elList.appendChild(elToDo);
         
