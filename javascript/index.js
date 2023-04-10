@@ -8,6 +8,13 @@ let dataInStorage = JSON.parse(localStorage.getItem(`allToDo`));
 
 let allToDos = dataInStorage ? dataInStorage : [];
 
+let onCompleted = (evt) => {
+    console.log(evt.target.checked);
+    console.log(evt.target.dataset.id);
+
+
+};
+
 let onEdit = (evt) => {
     allToDos.forEach((todo) => {
         if(todo.id === evt.target.dataset.id -0) {
@@ -47,6 +54,9 @@ let onRender = (arr) => {
         
         let elBtnDelete = elToDo.querySelector(`.js-delete-btn`);
         elBtnDelete.dataset.id = element.id;
+
+        let elCheckBox = elToDo.querySelector(`.js-check`);
+        elCheckBox.dataset.id = element.id;
 
         elBtnDelete.addEventListener(`click`, onDelete);
         elBtnEdit.addEventListener(`click`, onEdit);
