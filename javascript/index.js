@@ -8,21 +8,20 @@ let dataInStorage = JSON.parse(localStorage.getItem(`allToDo`));
 
 let allToDos = dataInStorage ? dataInStorage : [];
 
-let onCompleted = (evt) => {
+let onCompleted = (id, isCompleted) => {
     allToDos.forEach(todo => {
-        if(todo.id === evt.target.dataset.id - 0) {
-            todo.isCompleted = evt.target.checked
+        if(todo.id === id) {
+            todo.isCompleted = isCompleted;
         }
-    })
-    console.log(allToDos);
+    });
     localStorage.setItem(`allToDo`, JSON.stringify(allToDos));
     onRender(allToDos);
 
 };
 
-let onEdit = (evt) => {
+let onEdit = (id) => {
     allToDos.forEach((todo) => {
-        if(todo.id === evt.target.dataset.id -0) {
+        if(todo.id === id) {
             let editedText = prompt(`Edit ToDo`, todo.text);
             todo.text = editedText;
         }
@@ -31,12 +30,12 @@ let onEdit = (evt) => {
     localStorage.setItem(`allToDo`, JSON.stringify(allToDos)); 
 };
 
-let onDelete = (evt) => {
+let onDelete = (id) => {
     
     let arr = [];
 
     allToDos.forEach((todo) =>  {
-        if (todo.id !== evt.target.dataset.id - 0) {
+        if (todo.id !== id) {
             arr.push(todo);
         }
     });     
@@ -52,33 +51,22 @@ let onRender = (arr) => {
     arr.forEach((element) => {
         
         let elToDo = elTemplate.cloneNode(true);
-        let elText = elToDo.querySelector(`.js-text`);
-        elText.textContent = element.text;
 
-        
-        
+        let elLi = elToDo.querySelector(`.js-list-item`);
+        let elText = elToDo.querySelector(`.js-text`);
         let elBtnEdit = elToDo.querySelector(`.js-edit-btn`);
-        elBtnEdit.dataset.id = element.id;
-        
         let elBtnDelete = elToDo.querySelector(`.js-delete-btn`);
-        elBtnDelete.dataset.id = element.id;
-        
         let elCheckBox = elToDo.querySelector(`.js-check`);
-        elCheckBox.dataset.id = element.id;
+
         
         if (element.isCompleted) {
             elText.classList.add(`text-decoration-line-through`);
         };
-
-        elCheckBox.checked = element.isCompleted
-
-
-        elBtnDelete.addEventListener(`click`, onDelete);
-        elBtnEdit.addEventListener(`click`, onEdit);
-        elCheckBox.addEventListener(`change`, onCompleted);
-
-        elList.appendChild(elToDo);
         
+        elText.textContent = element.text;
+        elLi.dataset.id = element.id;
+        elCheckBox.checked = element.isCompleted;
+        elList.appendChild(elToDo); 
     });
 
 };
@@ -111,8 +99,21 @@ let onSubmit = (evt) => {
 
 };
 
+let eventDelegation = (evt) => {
+    let elParent = evt.target.closest(`.js-list-item`);
+    let elId = elParent.dataset.id - 0;
+    if(evt.target.matches(`.js-delete-btn`)){
+        onDelete(elId);
+    } else if(evt.target.matches(`.js-edit-btn`)) {
+        onEdit(elId);
+    } else if(evt.target.matches(`.js-check`)){
+        onCompleted(elId, evt.target.checked);
+    }
+}
+
 onRender(allToDos);
 
 elForm.addEventListener(`submit`, onSubmit);
+elList.addEventListener(`click`, eventDelegation);
 
    
