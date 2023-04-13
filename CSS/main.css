@@ -1,0 +1,13 @@
+@media only screen and (max-width: 900px) {
+  .js-form,
+  .js-list {
+    width: 80% !important;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .js-form,
+  .js-list {
+    width: 100% !important;
+  }
+}
